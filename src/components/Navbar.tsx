@@ -32,6 +32,9 @@ const Navbar: React.FC = () => {
             <Link to="/" className="text-gray-700 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">
               Home
             </Link>
+            <Link to="/gallery" className="text-gray-700 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">
+              Gallery
+            </Link>
             {isAuthenticated ? (
               <>
                 <Link to="/dashboard" className="text-gray-700 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">
@@ -84,6 +87,13 @@ const Navbar: React.FC = () => {
               onClick={toggleMenu}
             >
               Home
+            </Link>
+            <Link
+              to="/gallery"
+              className="block text-gray-700 hover:text-blue-500 px-3 py-2 rounded-md text-base font-medium"
+              onClick={toggleMenu}
+            >
+              Gallery
             </Link>
             {isAuthenticated ? (
               <>

@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import BookingConfirmation from "./pages/BookingConfirmation";
 import AdminDashboard from "./pages/AdminDashboard";
 import PaymentFeedback from "./pages/PaymentFeedback";
+import Gallery from './pages/Gallery';
 
 // Context
 import { AuthProvider } from "./context/AuthContext";
@@ -33,6 +34,7 @@ function App() {
               <Route path="/booking-confirmation" element={<BookingConfirmation />} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
               <Route path="/payment-feedback" element={<PaymentFeedback />} />
+              <Route path="/gallery" element={<Gallery />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </BookingProvider>
