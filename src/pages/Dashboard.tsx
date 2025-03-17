@@ -18,37 +18,38 @@ interface LocationData {
 const washCenters = [
   {
     id: '1',
-    name: 'Downtown Bike Spa',
-    address: '123 Main St, Downtown',
+    name: 'Doctor Garage',
+    address: 'Salem, Tamil Nadu',
     rating: 4.8,
     distance: '1.2 km',
-    price: 25
+    price: 250
   },
   {
     id: '2',
-    name: 'Uptown Bike Wash',
-    address: '456 Oak Ave, Uptown',
+    name: 'Chandra Bike Wash',
+    address: 'Anjaneyar Temple, Opposite Road, Anbu Nagar, Manakkadu, Salem, Tamil Nadu, 636008',
     rating: 4.5,
     distance: '2.5 km',
-    price: 20
+    price: 200
   },
   {
     id: '3',
-    name: 'Riverside Bike Care',
-    address: '789 River Rd, Riverside',
+    name: 'Riders Gallery',
+    address: 'Salem, Tamil Nadu',
     rating: 4.9,
     distance: '3.7 km',
-    price: 30
+    price: 300
   },
   {
     id: '4',
-    name: 'Hillside Bike Cleaners',
-    address: '101 Hill St, Hillside',
+    name: 'Maha Auto Works',
+    address: 'Kamarajar Nagar Colony, Ammapet, Salem, Tamil Nadu, 636014',
     rating: 4.6,
     distance: '4.1 km',
-    price: 22
+    price: 220
   }
 ];
+
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -317,6 +318,20 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* Choose Wash Plan */}
+          <div className="bg-white-100 p-4 rounded-md shadow-md mb-6">
+            <h3 className="text-lg font-semibold">Choose Your Plan</h3>
+            <select
+              name="washPlan"
+              className="border p-2 w-full rounded mt-2 mb-4" // Added mb-4 for spacing
+            >
+              <option value="Basic Wash">Basic Wash</option>
+              <option value="Standard Wash">Standard Wash</option>
+              <option value="Premium Wash">Premium Wash</option>
+            </select>
+          </div>
+
           
           <div className="text-center mb-8">
             <button
@@ -373,7 +388,7 @@ const Dashboard: React.FC = () => {
                       </div>
                       <div className="text-right">
                         <p className="text-gray-600 mb-1">{center.distance}</p>
-                        <p className="text-lg font-bold text-blue-600">${center.price}</p>
+                        <p className="text-lg font-bold text-blue-600">₹{center.price}</p>
                       </div>
                     </div>
                     
