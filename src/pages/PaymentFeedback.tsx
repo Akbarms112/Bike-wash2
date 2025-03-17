@@ -31,7 +31,7 @@ const PaymentFeedback: React.FC = () => {
     if (!paymentMethod) return;
 
     if (paymentMethod === "upi") {
-      window.location.href = "https://rzp.io/rzp/sE0OKew4"; // Redirect to Razorpay UPI link
+      window.location.href = "https://rzp.io/rzp/ZdWGdV9"; // Redirect to Razorpay UPI link
       return;
     }
 
@@ -82,20 +82,20 @@ const PaymentFeedback: React.FC = () => {
               <div className="mb-6">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-600">Service Charge</span>
-                  <span className="font-medium">${booking.washCenter?.price || 0}</span>
+                  <span className="font-medium">₹{booking.washCenter?.price || 0}</span>
                 </div>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-600">Pickup & Delivery</span>
-                  <span className="font-medium">$10</span>
+                  <span className="font-medium">₹10</span>
                 </div>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-600">Tax</span>
-                  <span className="font-medium">${((booking.washCenter?.price || 0) + 10) * 0.1}</span>
+                  <span className="font-medium">₹{((booking.washCenter?.price || 0) + 10) * 0.1}</span>
                 </div>
                 <div className="border-t border-gray-200 my-2 pt-2"></div>
                 <div className="flex justify-between items-center">
                   <span className="font-semibold">Total Amount</span>
-                  <span className="font-bold text-lg">${((booking.washCenter?.price || 0) + 10) * 1.1}</span>
+                  <span className="font-bold text-lg">₹{((booking.washCenter?.price || 0) + 10) * 1.1}</span>
                 </div>
               </div>
 
