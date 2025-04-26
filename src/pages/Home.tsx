@@ -1,11 +1,68 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Droplet, MapPin, Calendar, Truck, Star } from 'lucide-react';
+import { Droplet, MapPin, Calendar, Truck, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const testimonialRef = React.useRef<HTMLDivElement>(null);
+
+  const scrollTestimonials = (direction: 'left' | 'right') => {
+    if (testimonialRef.current) {
+      const scrollAmount = 400; // Adjust scroll amount as needed
+      testimonialRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // Extended testimonials data
+  const testimonials = [
+    {
+      id: 1,
+      name: "John Doe",
+      role: "Mountain Biker",
+      initials: "JD",
+      review: "I was amazed at how clean my bike was after BikeWash's service. They picked it up and delivered it back looking brand new. Highly recommend!"
+    },
+    {
+      id: 2,
+      name: "Jane Smith",
+      role: "Road Cyclist",
+      initials: "JS",
+      review: "The premium wash service is worth every penny. My bike hasn't looked this good since I bought it. The team is professional and punctual."
+    },
+    {
+      id: 3,
+      name: "Mike Johnson",
+      role: "BMX Enthusiast",
+      initials: "MJ",
+      review: "Convenient booking process and excellent service. They took care of my expensive bike with the attention it deserves. Will definitely use again!"
+    },
+    {
+      id: 4,
+      name: "Sarah Wilson",
+      role: "Professional Cyclist",
+      initials: "SW",
+      review: "Outstanding service! The attention to detail is remarkable. My racing bike has never performed better after their premium wash service."
+    },
+    {
+      id: 5,
+      name: "David Brown",
+      role: "Cycling Instructor",
+      initials: "DB",
+      review: "As someone who teaches cycling, I'm very particular about bike maintenance. BikeWash exceeds my expectations every single time."
+    },
+    {
+      id: 6,
+      name: "Emma Davis",
+      role: "Trail Rider",
+      initials: "ED",
+      review: "After intense trail rides, my bike gets pretty muddy. BikeWash does an amazing job getting it back to showroom condition."
+    }
+  ];
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -177,66 +234,51 @@ const Home: React.FC = () => {
               Don't just take our word for it. Here's what our satisfied customers have to say about our services.
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <div className="flex text-yellow-400 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-current" />
-                ))}
-              </div>
-              <p className="text-gray-600 mb-4">
-                "I was amazed at how clean my bike was after BikeWash's service. They picked it up and delivered it back looking brand new. Highly recommend!"
-              </p>
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span className="text-blue-500 font-bold">JD</span>
+
+          <div className="relative">
+            <button
+              onClick={() => scrollTestimonials('left')}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white p-2 rounded-full shadow-lg z-10 hover:bg-gray-50"
+            >
+              <ChevronLeft className="h-6 w-6 text-gray-600" />
+            </button>
+
+            <button
+              onClick={() => scrollTestimonials('right')}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white p-2 rounded-full shadow-lg z-10 hover:bg-gray-50"
+            >
+              <ChevronRight className="h-6 w-6 text-gray-600" />
+            </button>
+
+            <div 
+              ref={testimonialRef}
+              className="flex overflow-x-auto gap-6 pb-4 scrollbar-hide scroll-smooth"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {testimonials.map((testimonial) => (
+                <div 
+                  key={testimonial.id}
+                  className="bg-white p-6 rounded-lg shadow-md flex-shrink-0 w-full md:w-[400px]"
+                >
+                  <div className="flex text-yellow-400 mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-current" />
+                    ))}
+                  </div>
+                  <p className="text-gray-600 mb-4">
+                    "{testimonial.review}"
+                  </p>
+                  <div className="flex items-center">
+                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                      <span className="text-blue-500 font-bold">{testimonial.initials}</span>
+                    </div>
+                    <div className="ml-3">
+                      <p className="font-semibold">{testimonial.name}</p>
+                      <p className="text-gray-500 text-sm">{testimonial.role}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="ml-3">
-                  <p className="font-semibold">John Doe</p>
-                  <p className="text-gray-500 text-sm">Mountain Biker</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <div className="flex text-yellow-400 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-current" />
-                ))}
-              </div>
-              <p className="text-gray-600 mb-4">
-                "The premium wash service is worth every penny. My bike hasn't looked this good since I bought it. The team is professional and punctual."
-              </p>
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span className="text-blue-500 font-bold">JS</span>
-                </div>
-                <div className="ml-3">
-                  <p className="font-semibold">Jane Smith</p>
-                  <p className="text-gray-500 text-sm">Road Cyclist</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <div className="flex text-yellow-400 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-current" />
-                ))}
-              </div>
-              <p className="text-gray-600 mb-4">
-                "Convenient booking process and excellent service. They took care of my expensive bike with the attention it deserves. Will definitely use again!"
-              </p>
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span className="text-blue-500 font-bold">MJ</span>
-                </div>
-                <div className="ml-3">
-                  <p className="font-semibold">Mike Johnson</p>
-                  <p className="text-gray-500 text-sm">BMX Enthusiast</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>

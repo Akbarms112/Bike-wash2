@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { MapPin, Search, Star, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { useBooking } from '../context/BookingContext';
+import { useBooking, ServiceType } from '../context/BookingContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -14,53 +14,77 @@ interface LocationData {
   postcode?: string;
 }
 
-// Mock data for wash centers
+// Mock data for wash centers with different prices for each service
 const washCenters = [
   {
     id: '1',
-    name: 'Doctor Garage',
-    address: 'Salem, Tamil Nadu',
+    name: 'Downtown Bike Spa',
+    address: 'Anna Nagar, Chennai',
     rating: 4.8,
     distance: '1.2 km',
-    price: 250
+    price: {
+      pickup: 299,
+      drop: 299,
+      pickupDrop: 499
+    }
   },
   {
     id: '2',
-    name: 'Chandra Bike Wash',
-    address: 'Anjaneyar Temple, Opposite Road, Anbu Nagar, Manakkadu, Salem, Tamil Nadu, 636008',
+    name: 'Uptown Bike Wash',
+    address: 'Koramangala, Bangalore',
     rating: 4.5,
     distance: '2.5 km',
-    price: 200
+    price: {
+      pickup: 249,
+      drop: 249,
+      pickupDrop: 399
+    }
   },
   {
     id: '3',
-    name: 'Riders Gallery',
-    address: 'Salem, Tamil Nadu',
+    name: 'Riverside Bike Care',
+    address: 'Bandra West, Mumbai',
     rating: 4.9,
     distance: '3.7 km',
-    price: 300
+    price: {
+      pickup: 349,
+      drop: 349,
+      pickupDrop: 599
+    }
   },
   {
     id: '4',
-    name: 'Maha Auto Works',
-    address: 'Kamarajar Nagar Colony, Ammapet, Salem, Tamil Nadu, 636014',
+    name: 'Hillside Bike Cleaners',
+    address: 'Jubilee Hills, Hyderabad',
     rating: 4.6,
     distance: '4.1 km',
-    price: 220
+    price: {
+      pickup: 279,
+      drop: 279,
+      pickupDrop: 449
+    }
   }
 ];
 
+const serviceTypeLabels: Record<ServiceType, string> = {
+  pickup: 'Pickup Only',
+  drop: 'Drop Only',
+  pickupDrop: 'Pickup & Drop'
+};
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isAuthenticated } = useAuth();
   const { 
     userDetails, 
     bikeDetails, 
     selectedCenter,
+    serviceType,
     updateUserDetails, 
     updateBikeDetails, 
     selectWashCenter,
+    setServiceType,
     createBooking
   } = useBooking();
   
@@ -88,6 +112,15 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     getLocation();
   }, []);
+
+  useEffect(() => {
+    // Extract service type from URL if present
+    const searchParams = new URLSearchParams(location.search);
+    const type = searchParams.get('type') as ServiceType;
+    if (type && ['pickup', 'drop', 'pickupDrop'].includes(type)) {
+      setServiceType(type);
+    }
+  }, [location, setServiceType]);
 
   const getLocation = () => {
     setLocationLoading(true);
@@ -168,6 +201,10 @@ const Dashboard: React.FC = () => {
     navigate('/booking-confirmation');
   };
 
+  const getCurrentPrice = (center: typeof washCenters[0]) => {
+    return center.price[serviceType];
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -206,6 +243,45 @@ const Dashboard: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-800 mb-8">Book a Bike Wash</h1>
           
           <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 className="text-xl font-semibold mb-4">Service Type</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <button
+                onClick={() => setServiceType('pickup')}
+                className={`p-4 border rounded-lg ${
+                  serviceType === 'pickup'
+                    ? 'border-blue-500 bg-blue-50 text-blue-700'
+                    : 'border-gray-200 hover:border-blue-300'
+                }`}
+              >
+                <h3 className="font-semibold mb-2">Pickup Only</h3>
+                <p className="text-sm text-gray-600">We'll pick up your bike from your location</p>
+              </button>
+              
+              <button
+                onClick={() => setServiceType('drop')}
+                className={`p-4 border rounded-lg ${
+                  serviceType === 'drop'
+                    ? 'border-blue-500 bg-blue-50 text-blue-700'
+                    : 'border-gray-200 hover:border-blue-300'
+                }`}
+              >
+                <h3 className="font-semibold mb-2">Drop Only</h3>
+                <p className="text-sm text-gray-600">Drop your bike at our center</p>
+              </button>
+              
+              <button
+                onClick={() => setServiceType('pickupDrop')}
+                className={`p-4 border rounded-lg ${
+                  serviceType === 'pickupDrop'
+                    ? 'border-blue-500 bg-blue-50 text-blue-700'
+                    : 'border-gray-200 hover:border-blue-300'
+                }`}
+              >
+                <h3 className="font-semibold mb-2">Pickup & Drop</h3>
+                <p className="text-sm text-gray-600">Complete service with pickup and delivery</p>
+              </button>
+            </div>
+
             <h2 className="text-xl font-semibold mb-4">Your Information</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -318,20 +394,6 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
           </div>
-
-          {/* Choose Wash Plan */}
-          <div className="bg-white-100 p-4 rounded-md shadow-md mb-6">
-            <h3 className="text-lg font-semibold">Choose Your Plan</h3>
-            <select
-              name="washPlan"
-              className="border p-2 w-full rounded mt-2 mb-4" // Added mb-4 for spacing
-            >
-              <option value="Basic Wash">Basic Wash</option>
-              <option value="Standard Wash">Standard Wash</option>
-              <option value="Premium Wash">Premium Wash</option>
-            </select>
-          </div>
-
           
           <div className="text-center mb-8">
             <button
@@ -388,7 +450,8 @@ const Dashboard: React.FC = () => {
                       </div>
                       <div className="text-right">
                         <p className="text-gray-600 mb-1">{center.distance}</p>
-                        <p className="text-lg font-bold text-blue-600">₹{center.price}</p>
+                        <p className="text-lg font-bold text-blue-600">₹{getCurrentPrice(center)}</p>
+                        <p className="text-sm text-gray-500">{serviceTypeLabels[serviceType]}</p>
                       </div>
                     </div>
                     

@@ -18,14 +18,21 @@ interface WashCenter {
   address: string;
   rating: number;
   distance: string;
-  price: number;
+  price: {
+    pickup: number;
+    drop: number;
+    pickupDrop: number;
+  };
 }
+
+export type ServiceType = 'pickup' | 'drop' | 'pickupDrop';
 
 interface Booking {
   id: string;
   userDetails: UserDetails;
   bikeDetails: BikeDetails;
   washCenter: WashCenter | null;
+  serviceType: ServiceType;
   status: 'pending' | 'accepted' | 'in-progress' | 'completed' | 'cancelled';
   pickupTime: string;
   dropoffTime: string;
@@ -37,9 +44,11 @@ interface BookingContextType {
   bikeDetails: BikeDetails;
   selectedCenter: WashCenter | null;
   booking: Booking | null;
+  serviceType: ServiceType;
   updateUserDetails: (details: Partial<UserDetails>) => void;
   updateBikeDetails: (details: Partial<BikeDetails>) => void;
   selectWashCenter: (center: WashCenter) => void;
+  setServiceType: (type: ServiceType) => void;
   createBooking: () => void;
   cancelBooking: () => void;
   getBookings: () => Booking[];
@@ -72,6 +81,7 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [selectedCenter, setSelectedCenter] = useState<WashCenter | null>(null);
   const [booking, setBooking] = useState<Booking | null>(null);
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [serviceType, setServiceType] = useState<ServiceType>('pickupDrop');
 
   const updateUserDetails = (details: Partial<UserDetails>) => {
     setUserDetails({ ...userDetails, ...details });
@@ -91,6 +101,7 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({ children })
       userDetails,
       bikeDetails,
       washCenter: selectedCenter,
+      serviceType,
       status: 'pending',
       pickupTime: new Date(Date.now() + 30 * 60000).toLocaleTimeString(),
       dropoffTime: new Date(Date.now() + 120 * 60000).toLocaleTimeString(),
@@ -133,9 +144,11 @@ export const BookingProvider: React.FC<{ children: ReactNode }> = ({ children })
         bikeDetails, 
         selectedCenter, 
         booking,
+        serviceType,
         updateUserDetails, 
         updateBikeDetails, 
-        selectWashCenter, 
+        selectWashCenter,
+        setServiceType,
         createBooking,
         cancelBooking,
         getBookings,

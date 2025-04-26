@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, Droplet } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import Logo from './Logo';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -23,7 +25,7 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
-              <Droplet className="h-8 w-8 text-blue-500" />
+              <Logo className="h-8 w-auto" />
               <span className="ml-2 text-xl font-bold text-gray-800">BikeWash</span>
             </Link>
           </div>
@@ -32,9 +34,49 @@ const Navbar: React.FC = () => {
             <Link to="/" className="text-gray-700 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">
               Home
             </Link>
+            
+            {/* Services Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsServiceDropdownOpen(!isServiceDropdownOpen)}
+                className="text-gray-700 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+              >
+                Services
+                <ChevronDown className="h-4 w-4 ml-1" />
+              </button>
+              
+              {isServiceDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                  <Link
+                    to="/services/pickup"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Pickup Only
+                  </Link>
+                  <Link
+                    to="/services/drop"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Drop Only
+                  </Link>
+                  <Link
+                    to="/services/pickup-drop"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Pickup & Drop
+                  </Link>
+                </div>
+              )}
+            </div>
+            
             <Link to="/gallery" className="text-gray-700 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">
               Gallery
             </Link>
+            
+            <Link to="/contact" className="text-gray-700 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">
+              Contact
+            </Link>
+            
             {isAuthenticated ? (
               <>
                 <Link to="/dashboard" className="text-gray-700 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">
@@ -53,12 +95,20 @@ const Navbar: React.FC = () => {
                 </button>
               </>
             ) : (
-              <Link
-                to="/login"
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium"
-              >
-                Login
-              </Link>
+              <div className="flex space-x-2">
+                <Link
+                  to="/login"
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="bg-white hover:bg-gray-50 text-blue-500 border border-blue-500 px-4 py-2 rounded-md text-sm font-medium"
+                >
+                  Sign Up
+                </Link>
+              </div>
             )}
           </div>
           
@@ -88,6 +138,44 @@ const Navbar: React.FC = () => {
             >
               Home
             </Link>
+            
+            {/* Mobile Services Menu */}
+            <div className="space-y-1">
+              <button
+                onClick={() => setIsServiceDropdownOpen(!isServiceDropdownOpen)}
+                className="flex items-center w-full text-left text-gray-700 hover:text-blue-500 px-3 py-2 rounded-md text-base font-medium"
+              >
+                Services
+                <ChevronDown className="h-4 w-4 ml-1" />
+              </button>
+              
+              {isServiceDropdownOpen && (
+                <div className="pl-4 space-y-1">
+                  <Link
+                    to="/services/pickup"
+                    className="block text-gray-700 hover:text-blue-500 px-3 py-2 rounded-md text-base font-medium"
+                    onClick={toggleMenu}
+                  >
+                    Pickup Only
+                  </Link>
+                  <Link
+                    to="/services/drop"
+                    className="block text-gray-700 hover:text-blue-500 px-3 py-2 rounded-md text-base font-medium"
+                    onClick={toggleMenu}
+                  >
+                    Drop Only
+                  </Link>
+                  <Link
+                    to="/services/pickup-drop"
+                    className="block text-gray-700 hover:text-blue-500 px-3 py-2 rounded-md text-base font-medium"
+                    onClick={toggleMenu}
+                  >
+                    Pickup & Drop
+                  </Link>
+                </div>
+              )}
+            </div>
+            
             <Link
               to="/gallery"
               className="block text-gray-700 hover:text-blue-500 px-3 py-2 rounded-md text-base font-medium"
@@ -95,6 +183,15 @@ const Navbar: React.FC = () => {
             >
               Gallery
             </Link>
+            
+            <Link
+              to="/contact"
+              className="block text-gray-700 hover:text-blue-500 px-3 py-2 rounded-md text-base font-medium"
+              onClick={toggleMenu}
+            >
+              Contact
+            </Link>
+            
             {isAuthenticated ? (
               <>
                 <Link
@@ -124,13 +221,22 @@ const Navbar: React.FC = () => {
                 </button>
               </>
             ) : (
-              <Link
-                to="/login"
-                className="block bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-base font-medium"
-                onClick={toggleMenu}
-              >
-                Login
-              </Link>
+              <div className="space-y-1">
+                <Link
+                  to="/login"
+                  className="block bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-md text-base font-medium"
+                  onClick={toggleMenu}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="block bg-white hover:bg-gray-50 text-blue-500 border border-blue-500 px-3 py-2 rounded-md text-base font-medium"
+                  onClick={toggleMenu}
+                >
+                  Sign Up
+                </Link>
+              </div>
             )}
           </div>
         </div>
